@@ -1,19 +1,20 @@
 "use client";
 
-import useProduct from "@/app/hooks/useMeal"
-import ProductCard from "../../organisms/ProductCard"
-import { COCKTAIL_API } from "@/constants/baseUrls";
 import useRandomProducts from "@/app/functions/useRandomProducts";
-import Wait from '../../organisms/Wait'
-import LinkMenu from "../../atoms/LinkMenu";
+import { useParams } from "next/navigation";
+import { COCKTAIL_API } from "@/constants/baseUrls";
+import LinkMenu from "@/app/atomic/atoms/LinkMenu";
+import ProductCard from "@/app/atomic/organisms/ProductCard";
+import Wait from "@/app/atomic/organisms/Wait";
 
 
-export default function Page() {
-
-    const products = useRandomProducts(12, COCKTAIL_API, 'random.php');
+function CategoryPage() {
+    const router = useParams();
+    const cocktailCategory = router?.category;
+    const products = useRandomProducts(1, COCKTAIL_API, 'filter.php?c='+cocktailCategory);
     const categories = useRandomProducts(1, COCKTAIL_API, 'list.php?c=list');
 
-    console.log(categories);
+    console.log(cocktailCategory);
 
     return (
         <main className="flex page-space flex-col items-center justify-between flex-wrap">
@@ -30,14 +31,14 @@ export default function Page() {
             </div>
 
             <div className="flex flex-row gap-5 flex-wrap items-center justify-center mt-9 mb-9 ">
-                {products.length > 0 ?
-                    products.map(product => (
+                {products.length > 0 && products[0].drinks.length > 0 ?
+                    products[0].drinks.map((product: any) => (
                         <ProductCard
-                            key={product.drinks[0].idDrink}
-                            id={parseInt(product.drinks[0].idDrink)}
-                            name={product.drinks[0].strDrink}
-                            image={product.drinks[0].strDrinkThumb}
-                            category={product.drinks[0].strCategory ? '' : product.drinks[0].strCategory}
+                            key={product.idDrink}
+                            id={parseInt(product.idDrink)}
+                            name={product.strDrink}
+                            image={product.strDrinkThumb}
+                            category={product.strCategory == null ? cocktailCategory : product.strCategory}
                             singleRecipeRoute="/cocktails/"
                         />
                     )) : (
@@ -48,4 +49,7 @@ export default function Page() {
             </div>
         </main>
     )
+
 }
+
+export default CategoryPage;

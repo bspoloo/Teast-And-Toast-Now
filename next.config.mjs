@@ -34,6 +34,14 @@ const nextConfig = {
                 source: '/cocktails/:id',
                 destination: '/atomic/pages/cocktails/:id',
             },
+            {
+                source: '/cocktails/category/:category',
+                destination: '/atomic/pages/cocktails/categories/:category',
+            },
+            {
+                source: '/meals/category/:category',
+                destination: '/atomic/pages/meals/categories/:category',
+            },
         ];
     },
 };
